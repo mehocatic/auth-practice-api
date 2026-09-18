@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const { createClient } = require("@supabase/supabase-js");
-
+const swaggerUi = require("swagger-ui-express");
+const openapiSpec = require("./openapi.json");
 const supabase = createClient(
 	process.env.SUPABASE_URL,
 	process.env.SUPABASE_KEY,
@@ -101,7 +102,7 @@ app.get("/protected/dashboard", requireAuth, (req, res) => {
 		.status(200)
 		.json({ message: `Welcome to your dashboard, ${req.user.email}` });
 });
-
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openapiSpec));
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT} and connected to Supabase`);
 });
